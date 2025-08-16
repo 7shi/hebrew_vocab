@@ -1,3 +1,4 @@
+
 export interface Word {
   hebrew: string;
   transliteration: string;
@@ -18,7 +19,8 @@ export interface Verb {
 
 export enum Category {
   Places = 'places',
-  People = 'people',
+  Men = 'men',
+  Women = 'women',
   Verbs = 'verbs',
   Sentences = 'sentences',
 }

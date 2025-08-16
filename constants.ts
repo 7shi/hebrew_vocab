@@ -1,3 +1,4 @@
+
 import type { Word, Person, Verb } from "./types.ts";
 
 export const PLACES: Word[] = [
@@ -36,6 +37,9 @@ export const PEOPLE: Person[] = [
   { hebrew: "יִרְמְיָהוּ", transliteration: "Yirmiyahu", meaning: "Jeremiah", gender: "male" },
   { hebrew: "יְחֶזְקֵאל", transliteration: "Yechezkel", meaning: "Ezekiel", gender: "male" }
 ];
+
+export const MEN: Person[] = PEOPLE.filter(person => person.gender === 'male');
+export const WOMEN: Person[] = PEOPLE.filter(person => person.gender === 'female');
 
 export const VERBS: Verb[] = [
     { male: "אָהַב", transliteration_male: "ahav", female: "אָהֲבָה", transliteration_female: "ahava", meaning: "loved" },

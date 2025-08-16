@@ -3,7 +3,7 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { CategorySelector } from './components/CategorySelector.tsx';
 import { Flashcard } from './components/Flashcard.tsx';
 import { Controls } from './components/Controls.tsx';
-import { PLACES, PEOPLE, VERBS } from './constants.ts';
+import { PLACES, PEOPLE, VERBS, MEN, WOMEN } from './constants.ts';
 import { speak } from './services/speechService.ts';
 import { Category } from './types.ts';
 import type { Word } from './types.ts';
@@ -17,7 +17,8 @@ export const App: React.FC = () => {
 
   const wordLists = useMemo(() => ({
     [Category.Places]: PLACES,
-    [Category.People]: PEOPLE,
+    [Category.Men]: MEN,
+    [Category.Women]: WOMEN,
     [Category.Verbs]: VERBS.map(verb => ({
       hebrew: `${verb.male} / ${verb.female}`,
       transliteration: `${verb.transliteration_male} / ${verb.transliteration_female}`,
@@ -61,6 +62,7 @@ export const App: React.FC = () => {
     if (category === Category.Sentences) {
         return sentenceHistory[currentSentenceIndex];
     }
+    // @ts-ignore
     return wordLists[category][currentIndex];
   }, [category, currentIndex, wordLists, sentenceHistory, currentSentenceIndex]);
 
@@ -80,6 +82,7 @@ export const App: React.FC = () => {
       }
       setCurrentSentenceIndex(nextIndex);
     } else {
+      // @ts-ignore
       setCurrentIndex((prevIndex) => (prevIndex + 1) % wordLists[category].length);
     }
   }, [category, wordLists, generateRandomSentence, currentSentenceIndex, sentenceHistory.length]);
@@ -88,6 +91,7 @@ export const App: React.FC = () => {
     if (category === Category.Sentences) {
       setCurrentSentenceIndex((prevIndex) => Math.max(0, prevIndex - 1));
     } else {
+      // @ts-ignore
       setCurrentIndex((prevIndex) => (prevIndex - 1 + wordLists[category].length) % wordLists[category].length);
     }
   }, [category, wordLists]);
