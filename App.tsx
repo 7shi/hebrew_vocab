@@ -5,8 +5,8 @@ import { Flashcard } from './components/Flashcard.tsx';
 import { Controls } from './components/Controls.tsx';
 import { PLACES, PEOPLE, VERBS, MEN, WOMEN } from './constants.ts';
 import { speak } from './services/speechService.ts';
-import { Category } from './types.ts';
-import type { Word } from './types.ts';
+import { Category, VerbType } from './types.ts';
+import type { Word, Person, Place } from './types.ts';
 
 export const App: React.FC = () => {
   const [category, setCategory] = useState<Category>(Category.Places);
@@ -15,7 +15,7 @@ export const App: React.FC = () => {
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [speakOnNavigate, setSpeakOnNavigate] = useState(false);
 
-  const wordLists = useMemo(() => ({
+  const wordLists: Record<Exclude<Category, Category.Sentences>, Word[]> = useMemo(() => ({
     [Category.Places]: PLACES,
     [Category.Men]: MEN,
     [Category.Women]: WOMEN,
@@ -27,25 +27,53 @@ export const App: React.FC = () => {
   }), []);
 
   const generateRandomSentence = useCallback((): Word => {
-    const subjects = PEOPLE;
-    const objects: Word[] = [...PEOPLE, ...PLACES];
-    
-    const subject = subjects[Math.floor(Math.random() * subjects.length)];
     const verb = VERBS[Math.floor(Math.random() * VERBS.length)];
-    let object: Word;
-    
-    do {
-      object = objects[Math.floor(Math.random() * objects.length)];
-    } while (subject.hebrew === object.hebrew);
+    const subject = PEOPLE[Math.floor(Math.random() * PEOPLE.length)];
     
     const correctVerbForm = subject.gender === 'female' ? verb.female : verb.male;
+    const correctVerbTransliteration = subject.gender === 'female' ? verb.transliteration_female : verb.transliteration_male;
 
-    const hebrewSentence = `${subject.hebrew} ${correctVerbForm} אֶת ${object.hebrew}`;
-    const englishSentence = `${subject.meaning} ${verb.meaning} ${object.meaning}.`;
+    let hebrewSentence = '';
+    let englishSentence = '';
+    let transliterationSentence = '';
+
+    switch (verb.type) {
+      case VerbType.Intransitive: {
+        hebrewSentence = `${subject.hebrew} ${correctVerbForm}`;
+        transliterationSentence = `${subject.transliteration} ${correctVerbTransliteration}`;
+        englishSentence = `${subject.meaning} ${verb.meaning}.`;
+        break;
+      }
+      case VerbType.Transitive: {
+        let object: Person;
+        do {
+          object = PEOPLE[Math.floor(Math.random() * PEOPLE.length)];
+        } while (subject.hebrew === object.hebrew);
+
+        hebrewSentence = `${subject.hebrew} ${correctVerbForm} אֶת ${object.hebrew}`;
+        transliterationSentence = `${subject.transliteration} ${correctVerbTransliteration} et ${object.transliteration}`;
+        englishSentence = `${subject.meaning} ${verb.meaning} ${object.meaning}.`;
+        break;
+      }
+      case VerbType.Existence: {
+        const place = PLACES[Math.floor(Math.random() * PLACES.length)];
+        hebrewSentence = `${subject.hebrew} ${correctVerbForm} ${place.be}`;
+        transliterationSentence = `${subject.transliteration} ${correctVerbTransliteration} ${place.transliteration_be}`;
+        englishSentence = `${subject.meaning} ${verb.meaning} ${place.meaning}.`;
+        break;
+      }
+      case VerbType.Movement: {
+        const place = PLACES[Math.floor(Math.random() * PLACES.length)];
+        hebrewSentence = `${subject.hebrew} ${correctVerbForm} ${place.le}`;
+        transliterationSentence = `${subject.transliteration} ${correctVerbTransliteration} ${place.transliteration_le}`;
+        englishSentence = `${subject.meaning} ${verb.meaning} ${place.meaning}.`;
+        break;
+      }
+    }
     
     return {
       hebrew: hebrewSentence,
-      transliteration: '',
+      transliteration: transliterationSentence,
       meaning: englishSentence,
     };
   }, []);
@@ -62,7 +90,6 @@ export const App: React.FC = () => {
     if (category === Category.Sentences) {
         return sentenceHistory[currentSentenceIndex];
     }
-    // @ts-ignore
     return wordLists[category][currentIndex];
   }, [category, currentIndex, wordLists, sentenceHistory, currentSentenceIndex]);
 
@@ -82,7 +109,6 @@ export const App: React.FC = () => {
       }
       setCurrentSentenceIndex(nextIndex);
     } else {
-      // @ts-ignore
       setCurrentIndex((prevIndex) => (prevIndex + 1) % wordLists[category].length);
     }
   }, [category, wordLists, generateRandomSentence, currentSentenceIndex, sentenceHistory.length]);
@@ -91,7 +117,6 @@ export const App: React.FC = () => {
     if (category === Category.Sentences) {
       setCurrentSentenceIndex((prevIndex) => Math.max(0, prevIndex - 1));
     } else {
-      // @ts-ignore
       setCurrentIndex((prevIndex) => (prevIndex - 1 + wordLists[category].length) % wordLists[category].length);
     }
   }, [category, wordLists]);

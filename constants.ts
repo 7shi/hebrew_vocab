@@ -1,17 +1,98 @@
 
-import type { Word, Person, Verb } from "./types.ts";
+import { VerbType } from "./types.ts";
+import type { Person, Verb, Place } from "./types.ts";
 
-export const PLACES: Word[] = [
-  { hebrew: "אוּר", transliteration: "Ur", meaning: "Ur" },
-  { hebrew: "יְרִיחוֹ", transliteration: "Yericho", meaning: "Jericho" },
-  { hebrew: "יְרוּשָׁלַיִם", transliteration: "Yerushalayim", meaning: "Jerusalem" },
-  { hebrew: "חֶבְרוֹן", transliteration: "Chevron", meaning: "Hebron" },
-  { hebrew: "בָּבֶל", transliteration: "Bavel", meaning: "Babylon" },
-  { hebrew: "נִינְוֵה", transliteration: "Ninveh", meaning: "Nineveh" },
-  { hebrew: "שְׁכֶם", transliteration: "Shechem", meaning: "Shechem" },
-  { hebrew: "בֵּית אֵל", transliteration: "Beit El", meaning: "Bethel" },
-  { hebrew: "דַּמֶּשֶׂק", transliteration: "Damesek", meaning: "Damascus" },
-  { hebrew: "גֶּזֶר", transliteration: "Gezer", meaning: "Gezer" }
+export const PLACES: Place[] = [
+  { 
+    hebrew: "אוּר", 
+    transliteration: "Ur", 
+    meaning: "Ur", 
+    be: "בְּאוּר", 
+    transliteration_be: "be'Ur", 
+    le: "לְאוּר", 
+    transliteration_le: "le'Ur" 
+  },
+  { 
+    hebrew: "יְרִיחוֹ", 
+    transliteration: "Yericho", 
+    meaning: "Jericho", 
+    be: "בִּירִיחוֹ", 
+    transliteration_be: "biRicho", 
+    le: "לִירִיחוֹ", 
+    transliteration_le: "liRicho" 
+  },
+  { 
+    hebrew: "יְרוּשָׁלַיִם", 
+    transliteration: "Yerushalayim", 
+    meaning: "Jerusalem", 
+    be: "בִּירוּשָׁלַיִם", 
+    transliteration_be: "biRushalayim", 
+    le: "לִירוּשָׁלַיִם", 
+    transliteration_le: "liRushalayim" 
+  },
+  { 
+    hebrew: "חֶבְרוֹן", 
+    transliteration: "Chevron", 
+    meaning: "Hebron", 
+    be: "בְּחֶבְרוֹן", 
+    transliteration_be: "beChevron", 
+    le: "לְחֶבְרוֹן", 
+    transliteration_le: "leChevron" 
+  },
+  { 
+    hebrew: "בָּבֶל", 
+    transliteration: "Bavel", 
+    meaning: "Babylon", 
+    be: "בְּבָבֶל", 
+    transliteration_be: "beVavel", 
+    le: "לְבָבֶל", 
+    transliteration_le: "leVavel" 
+  },
+  { 
+    hebrew: "נִינְוֵה", 
+    transliteration: "Ninveh", 
+    meaning: "Nineveh", 
+    be: "בְּנִינְוֵה", 
+    transliteration_be: "beNinveh", 
+    le: "לְנִינְוֵה", 
+    transliteration_le: "leNinveh" 
+  },
+  { 
+    hebrew: "שְׁכֶם", 
+    transliteration: "Shechem", 
+    meaning: "Shechem", 
+    be: "בִּשְׁכֶם", 
+    transliteration_be: "biShchem", 
+    le: "לִשְׁכֶם", 
+    transliteration_le: "liShchem" 
+  },
+  { 
+    hebrew: "בֵּית אֵל", 
+    transliteration: "Beit El", 
+    meaning: "Bethel", 
+    be: "בְּבֵית אֵל", 
+    transliteration_be: "beVeit El", 
+    le: "לְבֵית אֵל", 
+    transliteration_le: "leVeit El" 
+  },
+  { 
+    hebrew: "דַּמֶּשֶׂק", 
+    transliteration: "Damesek", 
+    meaning: "Damascus", 
+    be: "בְּדַמֶּשֶׂק", 
+    transliteration_be: "beDamesek", 
+    le: "לְדַמֶּשֶׂק", 
+    transliteration_le: "leDamesek" 
+  },
+  { 
+    hebrew: "גֶּזֶר", 
+    transliteration: "Gezer", 
+    meaning: "Gezer", 
+    be: "בְּגֶזֶר", 
+    transliteration_be: "beGezer", 
+    le: "לְגֶזֶר", 
+    transliteration_le: "leGezer" 
+  }
 ];
 
 export const PEOPLE: Person[] = [
@@ -38,12 +119,32 @@ export const PEOPLE: Person[] = [
   { hebrew: "יְחֶזְקֵאל", transliteration: "Yechezkel", meaning: "Ezekiel", gender: "male" }
 ];
 
-export const MEN: Person[] = PEOPLE.filter(person => person.gender === 'male');
-export const WOMEN: Person[] = PEOPLE.filter(person => person.gender === 'female');
+export const MEN: Person[] = PEOPLE.filter(p => p.gender === 'male');
+export const WOMEN: Person[] = PEOPLE.filter(p => p.gender === 'female');
 
 export const VERBS: Verb[] = [
-    { male: "אָהַב", transliteration_male: "ahav", female: "אָהֲבָה", transliteration_female: "ahava", meaning: "loved" },
-    { male: "פָּקַד", transliteration_male: "pakad", female: "פָּקְדָה", transliteration_female: "pakda", meaning: "visited" },
-    { male: "רָאָה", transliteration_male: "ra'a", female: "רָאֲתָה", transliteration_female: "ra'ata", meaning: "saw" },
-    { male: "יָדַע", transliteration_male: "yada", female: "יָדְעָה", transliteration_female: "yad'a", meaning: "knew" }
+    { 
+      type: VerbType.Intransitive, 
+      male: "יָשַׁן", transliteration_male: "yashan", 
+      female: "יָשְׁנָה", transliteration_female: "yashna", 
+      meaning: "slept",
+    },
+    { 
+      type: VerbType.Transitive, 
+      male: "אָהַב", transliteration_male: "ahav", 
+      female: "אָהֲבָה", transliteration_female: "ahava", 
+      meaning: "loved",
+    },
+    { 
+      type: VerbType.Existence, 
+      male: "הָיָה", transliteration_male: "hayah", 
+      female: "הָיְתָה", transliteration_female: "hayta", 
+      meaning: "was in",
+    },
+    { 
+      type: VerbType.Movement, 
+      male: "הָלַךְ", transliteration_male: "halakh", 
+      female: "הָלְכָה", transliteration_female: "halkha", 
+      meaning: "went to",
+    }
 ];
