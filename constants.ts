@@ -1,29 +1,40 @@
 import type { Word, Person, Verb } from "./types.ts";
 
 export const PLACES: Word[] = [
+  { hebrew: "אוּר", transliteration: "Ur", meaning: "Ur" },
+  { hebrew: "יְרִיחוֹ", transliteration: "Yericho", meaning: "Jericho" },
   { hebrew: "יְרוּשָׁלַיִם", transliteration: "Yerushalayim", meaning: "Jerusalem" },
   { hebrew: "חֶבְרוֹן", transliteration: "Chevron", meaning: "Hebron" },
-  { hebrew: "בְּאֵר שֶׁבַע", transliteration: "Be'er Sheva", meaning: "Beersheba" },
-  { hebrew: "יְרִיחוֹ", transliteration: "Yericho", meaning: "Jericho" },
-  { hebrew: "בֵּית אֵל", transliteration: "Beit El", meaning: "Bethel" },
+  { hebrew: "בָּבֶל", transliteration: "Bavel", meaning: "Babylon" },
+  { hebrew: "נִינְוֵה", transliteration: "Ninveh", meaning: "Nineveh" },
   { hebrew: "שְׁכֶם", transliteration: "Shechem", meaning: "Shechem" },
-  { hebrew: "שִׁלֹה", transliteration: "Shiloh", meaning: "Shiloh" },
-  { hebrew: "בֵּית לֶחֶם", transliteration: "Beit Lechem", meaning: "Bethlehem" },
-  { hebrew: "עַזָּה", transliteration: "Azzah", meaning: "Gaza" },
-  { hebrew: "הַנֶּגֶב", transliteration: "HaNegev", meaning: "The Negev" }
+  { hebrew: "בֵּית אֵל", transliteration: "Beit El", meaning: "Bethel" },
+  { hebrew: "דַּמֶּשֶׂק", transliteration: "Damesek", meaning: "Damascus" },
+  { hebrew: "גֶּזֶר", transliteration: "Gezer", meaning: "Gezer" }
 ];
 
 export const PEOPLE: Person[] = [
+  { hebrew: "אָדָם", transliteration: "Adam", meaning: "Adam", gender: "male" },
+  { hebrew: "חַוָּה", transliteration: "Chavah", meaning: "Eve", gender: "female" },
+  { hebrew: "נֹחַ", transliteration: "Noach", meaning: "Noah", gender: "male" },
   { hebrew: "אַבְרָהָם", transliteration: "Avraham", meaning: "Abraham", gender: "male" },
   { hebrew: "שָׂרָה", transliteration: "Sarah", meaning: "Sarah", gender: "female" },
+  { hebrew: "יִצְחָק", transliteration: "Yitzhak", meaning: "Isaac", gender: "male" },
+  { hebrew: "רִבְקָה", transliteration: "Rivka", meaning: "Rebekah", gender: "female" },
+  { hebrew: "יַעֲקֹב", transliteration: "Yaakov", meaning: "Jacob", gender: "male" },
+  { hebrew: "רָחֵל", transliteration: "Rachel", meaning: "Rachel", gender: "female" },
+  { hebrew: "לֵאָה", transliteration: "Leah", meaning: "Leah", gender: "female" },
+  { hebrew: "יוֹסֵף", transliteration: "Yosef", meaning: "Joseph", gender: "male" },
   { hebrew: "מֹשֶׁה", transliteration: "Moshe", meaning: "Moses", gender: "male" },
+  { hebrew: "יְהוֹשֻׁעַ", transliteration: "Yehoshua", meaning: "Joshua", gender: "male" },
+  { hebrew: "שְׁמוּאֵל", transliteration: "Shmu'el", meaning: "Samuel", gender: "male" },
+  { hebrew: "רוּת", transliteration: "Rut", meaning: "Ruth", gender: "female" },
+  { hebrew: "שָׁאוּל", transliteration: "Sha'ul", meaning: "Saul", gender: "male" },
   { hebrew: "דָּוִד", transliteration: "David", meaning: "David", gender: "male" },
   { hebrew: "שְׁלֹמֹה", transliteration: "Shlomo", meaning: "Solomon", gender: "male" },
-  { hebrew: "רָחֵל", transliteration: "Rachel", meaning: "Rachel", gender: "female" },
-  { hebrew: "יִצְחָק", transliteration: "Yitzhak", meaning: "Isaac", gender: "male" },
-  { hebrew: "יַעֲקֹב", transliteration: "Yaakov", meaning: "Jacob", gender: "male" },
-  { hebrew: "רִבְקָה", transliteration: "Rivka", meaning: "Rebecca", gender: "female" },
-  { hebrew: "לֵאָה", transliteration: "Leah", meaning: "Leah", gender: "female" }
+  { hebrew: "יְשַׁעְיָהוּ", transliteration: "Yeshayahu", meaning: "Isaiah", gender: "male" },
+  { hebrew: "יִרְמְיָהוּ", transliteration: "Yirmiyahu", meaning: "Jeremiah", gender: "male" },
+  { hebrew: "יְחֶזְקֵאל", transliteration: "Yechezkel", meaning: "Ezekiel", gender: "male" }
 ];
 
 export const VERBS: Verb[] = [
