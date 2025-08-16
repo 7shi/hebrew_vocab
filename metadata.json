@@ -1,0 +1,5 @@
+{
+  "name": "Hebrew Proper Noun Learner",
+  "description": "An interactive web application designed to help users learn Hebrew proper nouns (place names and personal names). It features a clean flashcard interface and utilizes the Web Speech API for audible pronunciation to aid in learning.",
+  "requestFramePermissions": []
+}
