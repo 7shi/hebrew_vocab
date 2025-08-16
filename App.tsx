@@ -34,12 +34,12 @@ export const App: React.FC = () => {
     const correctVerbForm = subject.gender === 'female' ? verb.female : verb.male;
 
     const hebrewSentence = `${subject.hebrew} ${correctVerbForm} אֶת ${object.hebrew}`;
-    const japaneseSentence = `${subject.meaning}は${object.meaning}を${verb.meaning}。`;
+    const englishSentence = `${subject.meaning} ${verb.meaning} ${object.meaning}.`;
     
     return {
       hebrew: hebrewSentence,
       transliteration: '',
-      meaning: japaneseSentence,
+      meaning: englishSentence,
     };
   }, []);
 
