@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { CategorySelector } from './components/CategorySelector.tsx';
 import { Flashcard } from './components/Flashcard.tsx';
@@ -17,6 +18,11 @@ export const App: React.FC = () => {
   const wordLists = useMemo(() => ({
     [Category.Places]: PLACES,
     [Category.People]: PEOPLE,
+    [Category.Verbs]: VERBS.map(verb => ({
+      hebrew: `${verb.male} / ${verb.female}`,
+      transliteration: `${verb.transliteration_male} / ${verb.transliteration_female}`,
+      meaning: verb.meaning
+    }))
   }), []);
 
   const generateRandomSentence = useCallback((): Word => {
@@ -87,10 +93,16 @@ export const App: React.FC = () => {
   }, [category, wordLists]);
 
   const handleSpeak = useCallback(() => {
-    if (currentWord) {
+    if (!currentWord) return;
+
+    if (category === Category.Verbs) {
+      // For verbs, speak both male and female forms with a pause
+      const verbToSpeak = `${VERBS[currentIndex].male}. ${VERBS[currentIndex].female}`;
+      speak(verbToSpeak);
+    } else {
       speak(currentWord.hebrew);
     }
-  }, [currentWord]);
+  }, [currentWord, category, currentIndex]);
 
   // Effect for keyboard shortcuts
   useEffect(() => {
@@ -120,10 +132,10 @@ export const App: React.FC = () => {
   // Effect to speak automatically on navigation
   useEffect(() => {
     if (speakOnNavigate && currentWord) {
-      speak(currentWord.hebrew);
+      handleSpeak();
       setSpeakOnNavigate(false); // Reset the flag
     }
-  }, [currentWord, speakOnNavigate]);
+  }, [currentWord, speakOnNavigate, handleSpeak]);
 
 
   if (!currentWord) return null;

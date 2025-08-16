@@ -10,12 +10,15 @@ export interface Person extends Word {
 
 export interface Verb {
   male: string;
+  transliteration_male: string;
   female: string;
+  transliteration_female: string;
   meaning: string;
 }
 
 export enum Category {
   Places = 'places',
   People = 'people',
+  Verbs = 'verbs',
   Sentences = 'sentences',
 }

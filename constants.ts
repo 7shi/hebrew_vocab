@@ -27,8 +27,8 @@ export const PEOPLE: Person[] = [
 ];
 
 export const VERBS: Verb[] = [
-    { male: "אָהַב", female: "אָהֲבָה", meaning: "loved" },
-    { male: "פָּקַד", female: "פָּקְדָה", meaning: "visited" },
-    { male: "רָאָה", female: "רָאֲתָה", meaning: "saw" },
-    { male: "יָדַע", female: "יָדְעָה", meaning: "knew" }
+    { male: "אָהַב", transliteration_male: "ahav", female: "אָהֲבָה", transliteration_female: "ahava", meaning: "loved" },
+    { male: "פָּקַד", transliteration_male: "pakad", female: "פָּקְדָה", transliteration_female: "pakda", meaning: "visited" },
+    { male: "רָאָה", transliteration_male: "ra'a", female: "רָאֲתָה", transliteration_female: "ra'ata", meaning: "saw" },
+    { male: "יָדַע", transliteration_male: "yada", female: "יָדְעָה", transliteration_female: "yad'a", meaning: "knew" }
 ];

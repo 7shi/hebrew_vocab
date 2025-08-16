@@ -10,6 +10,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({ selectedCate
   const categories = [
     { id: Category.Places, label: 'Place Names' },
     { id: Category.People, label: 'Personal Names' },
+    { id: Category.Verbs, label: 'Verbs' },
     { id: Category.Sentences, label: 'Sentences' },
   ];
 

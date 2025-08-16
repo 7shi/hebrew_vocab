@@ -6,10 +6,14 @@ interface FlashcardProps {
 }
 
 export const Flashcard: React.FC<FlashcardProps> = ({ word }) => {
-  const isSentence = word.hebrew.includes(' ');
+  // A sentence will have at least 4 parts: Subject Verb Preposition Object
+  const isSentence = word.hebrew.split(' ').length >= 4;
+  // A verb is displayed with a slash
+  const isVerb = !isSentence && word.hebrew.includes('/');
+
   return (
     <div className="bg-slate-800 rounded-xl shadow-lg p-8 text-center h-64 flex flex-col justify-center items-center ring-1 ring-white/10 animate-fade-in">
-      <p lang="he" dir="rtl" className={`font-hebrew font-bold text-white mb-4 ${isSentence ? 'text-5xl leading-tight' : 'text-7xl'}`}>
+      <p lang="he" dir="rtl" className={`font-hebrew font-bold text-white mb-4 ${isSentence ? 'text-5xl leading-tight' : isVerb ? 'text-6xl' : 'text-7xl'}`}>
         {word.hebrew}
       </p>
       {word.transliteration && (
