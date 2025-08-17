@@ -1,9 +1,16 @@
-
-
 import { VerbType } from "./types.ts";
 import type { Person, Verb, Place } from "./types.ts";
 
 export const PLACES: Place[] = [
+  { 
+    hebrew: "יְרוּשָׁלַיִם", 
+    transliteration: "Yerushalayim", 
+    meaning: "Jerusalem", 
+    be: "בִּירוּשָׁלַיִם", 
+    transliteration_be: "biRushalayim", 
+    le: "לִירוּשָׁלַיִם", 
+    transliteration_le: "liRushalayim" 
+  },
   { 
     hebrew: "אוּר", 
     transliteration: "Ur", 
@@ -21,15 +28,6 @@ export const PLACES: Place[] = [
     transliteration_be: "biRicho", 
     le: "לִירִיחוֹ", 
     transliteration_le: "liRicho" 
-  },
-  { 
-    hebrew: "יְרוּשָׁלַיִם", 
-    transliteration: "Yerushalayim", 
-    meaning: "Jerusalem", 
-    be: "בִּירוּשָׁלַיִם", 
-    transliteration_be: "biRushalayim", 
-    le: "לִירוּשָׁלַיִם", 
-    transliteration_le: "liRushalayim" 
   },
   { 
     hebrew: "חֶבְרוֹן", 

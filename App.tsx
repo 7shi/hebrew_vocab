@@ -1,5 +1,3 @@
-
-
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { CategorySelector } from './components/CategorySelector.tsx';
 import { Flashcard } from './components/Flashcard.tsx';
@@ -251,6 +249,16 @@ export const App: React.FC = () => {
             onRateChange={handleRateChange}
           />
           <p>Created for learning and practice. Audio by Web Speech API.</p>
+          <p className="mt-2">
+            <a 
+              href="https://github.com/7shi/hebrew_vocab" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-indigo-400 hover:text-indigo-300 transition-colors"
+            >
+              GitHub Repository
+            </a>
+          </p>
         </footer>
       </div>
     </div>

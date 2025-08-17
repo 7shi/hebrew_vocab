@@ -1,4 +1,3 @@
-
 export const speak = (
   text: string,
   voice: SpeechSynthesisVoice | null,

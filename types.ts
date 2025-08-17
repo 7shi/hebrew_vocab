@@ -1,5 +1,3 @@
-
-
 export interface Word {
   hebrew: string;
   transliteration: string;

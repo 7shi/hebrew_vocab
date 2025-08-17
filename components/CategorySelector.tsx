@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Category } from '../types.ts';
 import { ChevronDownIcon } from './Icons.tsx';
