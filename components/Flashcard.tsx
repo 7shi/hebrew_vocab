@@ -6,8 +6,8 @@ interface FlashcardProps {
 }
 
 export const Flashcard: React.FC<FlashcardProps> = ({ word }) => {
-  // A sentence will have at least 4 parts: Subject Verb Preposition Object
-  const isSentence = word.hebrew.split(' ').length >= 4;
+  // A sentence's meaning will always end with a period.
+  const isSentence = word.meaning.endsWith('.');
   // A verb is displayed with a slash
   const isVerb = !isSentence && word.hebrew.includes('/');
 

@@ -9,7 +9,7 @@ import { Category, VerbType } from './types.ts';
 import type { Word, Person, Place, Verb } from './types.ts';
 
 export const App: React.FC = () => {
-  const [category, setCategory] = useState<Category>(Category.Places);
+  const [category, setCategory] = useState<string>(Category.Places);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sentenceHistory, setSentenceHistory] = useState<Word[]>([]);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
@@ -20,7 +20,7 @@ export const App: React.FC = () => {
   const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
   const [rate, setRate] = useState(0.85);
 
-  const wordLists: Record<Exclude<Category, Category.Sentences>, Word[]> = useMemo(() => ({
+  const wordLists: Record<string, Word[]> = useMemo(() => ({
     [Category.Places]: PLACES,
     [Category.PeopleAll]: PEOPLE,
     [Category.PeopleMale]: MEN,
@@ -42,10 +42,29 @@ export const App: React.FC = () => {
     })),
   }), []);
 
-  const generateRandomSentence = useCallback((): Word => {
-    const verb = VERBS[Math.floor(Math.random() * VERBS.length)];
-    const subject = PEOPLE[Math.floor(Math.random() * PEOPLE.length)];
+  const generateRandomSentence = useCallback((sentenceCategory: string): Word => {
+    const [, verbFilter, genderFilter] = sentenceCategory.split('_');
     
+    // 1. Select Verb
+    let verb: Verb;
+    if (verbFilter === 'all') {
+        verb = VERBS[Math.floor(Math.random() * VERBS.length)];
+    } else {
+        const foundVerb = VERBS.find(v => v.meaning === verbFilter);
+        verb = foundVerb || VERBS[0]; // Fallback to the first verb
+    }
+
+    // 2. Select Subject based on gender
+    let subjectPool: Person[];
+    if (genderFilter === 'masculine') {
+        subjectPool = MEN;
+    } else if (genderFilter === 'feminine') {
+        subjectPool = WOMEN;
+    } else { // 'both'
+        subjectPool = PEOPLE;
+    }
+    const subject = subjectPool[Math.floor(Math.random() * subjectPool.length)];
+
     const correctVerbForm = subject.gender === 'female' ? verb.female : verb.male;
     const correctVerbTransliteration = subject.gender === 'female' ? verb.transliteration_female : verb.transliteration_male;
 
@@ -107,14 +126,12 @@ export const App: React.FC = () => {
         const hebrewVoices = allVoices.filter(v => v.lang.startsWith('he-'));
         setVoices(hebrewVoices);
         
-        // Automatically select the first Hebrew voice if available and none is selected
         if (hebrewVoices.length > 0) {
           setSelectedVoice(prev => prev || hebrewVoices[0]);
         }
       }
     };
     
-    // Voices are loaded asynchronously
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.onvoiceschanged = loadVoices;
         loadVoices();
@@ -125,48 +142,55 @@ export const App: React.FC = () => {
         window.speechSynthesis.onvoiceschanged = null;
       }
     };
-  }, []); // Run only once on mount
+  }, []);
 
   useEffect(() => {
-    // Initialize sentence history when switching to the sentences category for the first time
-    if (category === Category.Sentences && sentenceHistory.length === 0) {
-      setSentenceHistory([generateRandomSentence()]);
+    // Initialize sentence history when the app loads into a sentence category for the first time
+    if (category.startsWith('sentences') && sentenceHistory.length === 0) {
+      setSentenceHistory([generateRandomSentence(category)]);
       setCurrentSentenceIndex(0);
     }
   }, [category, sentenceHistory.length, generateRandomSentence]);
   
   const currentWord = useMemo(() => {
-    if (category === Category.Sentences) {
+    if (category.startsWith('sentences')) {
         return sentenceHistory[currentSentenceIndex];
     }
-    return wordLists[category][currentIndex];
+    return wordLists[category]?.[currentIndex];
   }, [category, currentIndex, wordLists, sentenceHistory, currentSentenceIndex]);
 
-  const handleSelectCategory = useCallback((newCategory: Category) => {
+  const handleSelectCategory = useCallback((newCategory: string) => {
+    const oldCategory = category;
     setCategory(newCategory);
-    if (newCategory !== Category.Sentences) {
+
+    if (newCategory.startsWith('sentences')) {
+      // Reset sentence history if switching to sentences or between sentence sub-categories
+      if (!oldCategory.startsWith('sentences') || newCategory !== oldCategory) {
+        setSentenceHistory([generateRandomSentence(newCategory)]);
+        setCurrentSentenceIndex(0);
+      }
+    } else {
       setCurrentIndex(0);
     }
-  }, []);
+  }, [category, generateRandomSentence]);
 
   const handleNext = useCallback(() => {
-    if (category === Category.Sentences) {
+    if (category.startsWith('sentences')) {
       const nextIndex = currentSentenceIndex + 1;
-      // If the next sentence doesn't exist in our history, generate and add it.
       if (nextIndex >= sentenceHistory.length) {
-        setSentenceHistory(prev => [...prev, generateRandomSentence()]);
+        setSentenceHistory(prev => [...prev, generateRandomSentence(category)]);
       }
       setCurrentSentenceIndex(nextIndex);
     } else {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % wordLists[category].length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % (wordLists[category]?.length || 1));
     }
   }, [category, wordLists, generateRandomSentence, currentSentenceIndex, sentenceHistory.length]);
 
   const handlePrev = useCallback(() => {
-    if (category === Category.Sentences) {
+    if (category.startsWith('sentences')) {
       setCurrentSentenceIndex((prevIndex) => Math.max(0, prevIndex - 1));
     } else {
-      setCurrentIndex((prevIndex) => (prevIndex - 1 + wordLists[category].length) % wordLists[category].length);
+      setCurrentIndex((prevIndex) => (prevIndex - 1 + (wordLists[category]?.length || 1)) % (wordLists[category]?.length || 1));
     }
   }, [category, wordLists]);
 
@@ -174,7 +198,6 @@ export const App: React.FC = () => {
     if (!currentWord) return;
 
     if (category === Category.VerbsBoth) {
-      // For verbs, speak both male and female forms with a pause
       const verbToSpeak = `${VERBS[currentIndex].male}. ${VERBS[currentIndex].female}`;
       speak(verbToSpeak, selectedVoice, rate);
     } else {
@@ -230,7 +253,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 selection:bg-indigo-500 selection:text-white">
-      <div className="w-full max-w-md mx-auto">
+      <div className="w-full max-w-2xl mx-auto">
         <header className="text-center mb-8">
           <h1 className="text-4xl font-bold text-slate-100">Hebrew Vocabulary</h1>
           <p className="text-indigo-400 mt-1">Proper Nouns, Verbs & Sentences</p>

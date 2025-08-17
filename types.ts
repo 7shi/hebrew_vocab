@@ -41,5 +41,25 @@ export enum Category {
   VerbsBoth = 'verbs_both',
   VerbsMale = 'verbs_male',
   VerbsFemale = 'verbs_female',
-  Sentences = 'sentences',
+  
+  // Sentence Categories
+  SentencesAllBoth = 'sentences_all_both',
+  SentencesAllMasculine = 'sentences_all_masculine',
+  SentencesAllFeminine = 'sentences_all_feminine',
+  
+  SentencesSleptBoth = 'sentences_slept_both',
+  SentencesSleptMasculine = 'sentences_slept_masculine',
+  SentencesSleptFeminine = 'sentences_slept_feminine',
+  
+  SentencesLovedBoth = 'sentences_loved_both',
+  SentencesLovedMasculine = 'sentences_loved_masculine',
+  SentencesLovedFeminine = 'sentences_loved_feminine',
+  
+  SentencesWasBoth = 'sentences_was_both',
+  SentencesWasMasculine = 'sentences_was_masculine',
+  SentencesWasFeminine = 'sentences_was_feminine',
+
+  SentencesWentBoth = 'sentences_went_both',
+  SentencesWentMasculine = 'sentences_went_masculine',
+  SentencesWentFeminine = 'sentences_went_feminine',
 }
