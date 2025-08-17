@@ -22,8 +22,9 @@ export const App: React.FC = () => {
 
   const wordLists: Record<Exclude<Category, Category.Sentences>, Word[]> = useMemo(() => ({
     [Category.Places]: PLACES,
-    [Category.Men]: MEN,
-    [Category.Women]: WOMEN,
+    [Category.PeopleAll]: PEOPLE,
+    [Category.PeopleMale]: MEN,
+    [Category.PeopleFemale]: WOMEN,
     [Category.Verbs]: VERBS.map(verb => ({
       hebrew: `${verb.male} / ${verb.female}`,
       transliteration: `${verb.transliteration_male} / ${verb.transliteration_female}`,

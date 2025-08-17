@@ -35,8 +35,9 @@ export interface Verb {
 
 export enum Category {
   Places = 'places',
-  Men = 'men',
-  Women = 'women',
+  PeopleAll = 'people_all',
+  PeopleMale = 'people_male',
+  PeopleFemale = 'people_female',
   Verbs = 'verbs',
   Sentences = 'sentences',
 }
