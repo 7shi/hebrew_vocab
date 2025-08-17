@@ -38,6 +38,8 @@ export enum Category {
   PeopleAll = 'people_all',
   PeopleMale = 'people_male',
   PeopleFemale = 'people_female',
-  Verbs = 'verbs',
+  VerbsBoth = 'verbs_both',
+  VerbsMale = 'verbs_male',
+  VerbsFemale = 'verbs_female',
   Sentences = 'sentences',
 }

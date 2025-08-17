@@ -8,13 +8,17 @@ interface CategorySelectorProps {
 }
 
 type MainCategory = 'places' | 'people' | 'verbs' | 'sentences';
-type SubCategory = 'all' | 'male' | 'female';
+type SubCategory = 'all' | 'male' | 'female' | 'both';
 
 export const CategorySelector: React.FC<CategorySelectorProps> = ({ selectedCategory, onSelectCategory }) => {
   const [main, sub] = useMemo((): [MainCategory, SubCategory] => {
     if (selectedCategory.startsWith('people')) {
       const subCategory = selectedCategory.split('_')[1] as SubCategory;
       return ['people', subCategory];
+    }
+    if (selectedCategory.startsWith('verbs')) {
+      const subCategory = selectedCategory.split('_')[1] as SubCategory;
+      return ['verbs', subCategory];
     }
     return [selectedCategory as MainCategory, 'all']; // default sub, not visible
   }, [selectedCategory]);
@@ -24,6 +28,8 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({ selectedCate
     if (newMain === 'people') {
       // When switching to 'people', default to 'all' and fire the update.
       onSelectCategory(Category.PeopleAll);
+    } else if (newMain === 'verbs') {
+      onSelectCategory(Category.VerbsBoth);
     } else {
       onSelectCategory(newMain as Category);
     }
@@ -31,7 +37,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({ selectedCate
 
   const handleSubChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newSub = event.target.value as SubCategory;
-    onSelectCategory(`people_${newSub}` as Category);
+    onSelectCategory(`${main}_${newSub}` as Category);
   };
   
   const mainCategories = [
@@ -41,11 +47,19 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({ selectedCate
     { id: 'sentences', label: 'Sentences' },
   ];
 
-  const subCategories = [
+  const peopleSubCategories = [
     { id: 'all', label: 'All' },
     { id: 'male', label: 'Male' },
     { id: 'female', label: 'Female' },
   ];
+  
+  const verbSubCategories = [
+    { id: 'both', label: 'Both' },
+    { id: 'male', label: 'Masculine' },
+    { id: 'female', label: 'Feminine' },
+  ];
+  
+  const subCategoryOptions = main === 'people' ? peopleSubCategories : verbSubCategories;
 
   return (
     <div className="flex gap-2 w-full">
@@ -69,7 +83,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({ selectedCate
         </div>
       </div>
 
-      {main === 'people' && (
+      {(main === 'people' || main === 'verbs') && (
         <div className="relative flex-1">
           <label htmlFor="sub-category-select" className="sr-only">Select a sub category</label>
           <select
@@ -77,9 +91,9 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({ selectedCate
             value={sub}
             onChange={handleSubChange}
             className="w-full appearance-none bg-slate-800 text-white text-base font-semibold py-3 px-4 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-indigo-500 cursor-pointer"
-            aria-label="Select person name category"
+            aria-label={`Select ${main} sub-category`}
           >
-              {subCategories.map(({ id, label }) => (
+              {subCategoryOptions.map(({ id, label }) => (
                 <option key={id} value={id}>
                   {label}
                 </option>

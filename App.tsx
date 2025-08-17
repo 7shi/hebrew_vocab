@@ -25,11 +25,21 @@ export const App: React.FC = () => {
     [Category.PeopleAll]: PEOPLE,
     [Category.PeopleMale]: MEN,
     [Category.PeopleFemale]: WOMEN,
-    [Category.Verbs]: VERBS.map(verb => ({
+    [Category.VerbsBoth]: VERBS.map(verb => ({
       hebrew: `${verb.male} / ${verb.female}`,
       transliteration: `${verb.transliteration_male} / ${verb.transliteration_female}`,
       meaning: verb.meaning
-    }))
+    })),
+    [Category.VerbsMale]: VERBS.map(verb => ({
+      hebrew: verb.male,
+      transliteration: verb.transliteration_male,
+      meaning: verb.meaning
+    })),
+    [Category.VerbsFemale]: VERBS.map(verb => ({
+      hebrew: verb.female,
+      transliteration: verb.transliteration_female,
+      meaning: verb.meaning
+    })),
   }), []);
 
   const generateRandomSentence = useCallback((): Word => {
@@ -163,7 +173,7 @@ export const App: React.FC = () => {
   const handleSpeak = useCallback(() => {
     if (!currentWord) return;
 
-    if (category === Category.Verbs) {
+    if (category === Category.VerbsBoth) {
       // For verbs, speak both male and female forms with a pause
       const verbToSpeak = `${VERBS[currentIndex].male}. ${VERBS[currentIndex].female}`;
       speak(verbToSpeak, selectedVoice, rate);
