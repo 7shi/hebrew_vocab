@@ -1,12 +1,14 @@
 
+
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { CategorySelector } from './components/CategorySelector.tsx';
 import { Flashcard } from './components/Flashcard.tsx';
 import { Controls } from './components/Controls.tsx';
+import { SpeechSettings } from './components/SpeechSettings.tsx';
 import { PLACES, PEOPLE, VERBS, MEN, WOMEN } from './constants.ts';
 import { speak } from './services/speechService.ts';
 import { Category, VerbType } from './types.ts';
-import type { Word, Person, Place } from './types.ts';
+import type { Word, Person, Place, Verb } from './types.ts';
 
 export const App: React.FC = () => {
   const [category, setCategory] = useState<Category>(Category.Places);
@@ -14,6 +16,11 @@ export const App: React.FC = () => {
   const [sentenceHistory, setSentenceHistory] = useState<Word[]>([]);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [speakOnNavigate, setSpeakOnNavigate] = useState(false);
+
+  // Speech settings state
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
+  const [rate, setRate] = useState(0.85);
 
   const wordLists: Record<Exclude<Category, Category.Sentences>, Word[]> = useMemo(() => ({
     [Category.Places]: PLACES,
@@ -55,18 +62,23 @@ export const App: React.FC = () => {
         englishSentence = `${subject.meaning} ${verb.meaning} ${object.meaning}.`;
         break;
       }
-      case VerbType.Existence: {
-        const place = PLACES[Math.floor(Math.random() * PLACES.length)];
-        hebrewSentence = `${subject.hebrew} ${correctVerbForm} ${place.be}`;
-        transliterationSentence = `${subject.transliteration} ${correctVerbTransliteration} ${place.transliteration_be}`;
-        englishSentence = `${subject.meaning} ${verb.meaning} ${place.meaning}.`;
-        break;
-      }
+      case VerbType.Existence:
       case VerbType.Movement: {
+        if (!verb.hebrew_preposition || !verb.preposition) {
+          hebrewSentence = "Error: Inconsistent verb data";
+          englishSentence = "Error: Inconsistent verb data";
+          transliterationSentence = "Error";
+          break;
+        }
+        
         const place = PLACES[Math.floor(Math.random() * PLACES.length)];
-        hebrewSentence = `${subject.hebrew} ${correctVerbForm} ${place.le}`;
-        transliterationSentence = `${subject.transliteration} ${correctVerbTransliteration} ${place.transliteration_le}`;
-        englishSentence = `${subject.meaning} ${verb.meaning} ${place.meaning}.`;
+        
+        const hebrewPlaceForm = place[verb.hebrew_preposition];
+        const transliterationPlaceForm = place[`transliteration_${verb.hebrew_preposition}`];
+
+        hebrewSentence = `${subject.hebrew} ${correctVerbForm} ${hebrewPlaceForm}`;
+        transliterationSentence = `${subject.transliteration} ${correctVerbTransliteration} ${transliterationPlaceForm}`;
+        englishSentence = `${subject.meaning} ${verb.meaning} ${verb.preposition} ${place.meaning}.`;
         break;
       }
     }
@@ -77,6 +89,34 @@ export const App: React.FC = () => {
       meaning: englishSentence,
     };
   }, []);
+
+  // Effect to load speech synthesis voices
+  useEffect(() => {
+    const loadVoices = () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        const allVoices = window.speechSynthesis.getVoices();
+        const hebrewVoices = allVoices.filter(v => v.lang.startsWith('he-'));
+        setVoices(hebrewVoices);
+        
+        // Automatically select the first Hebrew voice if available and none is selected
+        if (hebrewVoices.length > 0) {
+          setSelectedVoice(prev => prev || hebrewVoices[0]);
+        }
+      }
+    };
+    
+    // Voices are loaded asynchronously
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        loadVoices();
+    }
+    
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = null;
+      }
+    };
+  }, []); // Run only once on mount
 
   useEffect(() => {
     // Initialize sentence history when switching to the sentences category for the first time
@@ -127,11 +167,11 @@ export const App: React.FC = () => {
     if (category === Category.Verbs) {
       // For verbs, speak both male and female forms with a pause
       const verbToSpeak = `${VERBS[currentIndex].male}. ${VERBS[currentIndex].female}`;
-      speak(verbToSpeak);
+      speak(verbToSpeak, selectedVoice, rate);
     } else {
-      speak(currentWord.hebrew);
+      speak(currentWord.hebrew, selectedVoice, rate);
     }
-  }, [currentWord, category, currentIndex]);
+  }, [currentWord, category, currentIndex, selectedVoice, rate]);
 
   // Effect for keyboard shortcuts
   useEffect(() => {
@@ -166,6 +206,16 @@ export const App: React.FC = () => {
     }
   }, [currentWord, speakOnNavigate, handleSpeak]);
 
+  const handleVoiceChange = (voiceName: string) => {
+    const voice = voices.find(v => v.name === voiceName);
+    if (voice) {
+      setSelectedVoice(voice);
+    }
+  };
+
+  const handleRateChange = (newRate: number) => {
+    setRate(newRate);
+  };
 
   if (!currentWord) return null;
 
@@ -193,6 +243,13 @@ export const App: React.FC = () => {
         </main>
         
         <footer className="text-center mt-12 text-slate-500 text-sm">
+           <SpeechSettings
+            voices={voices}
+            selectedVoice={selectedVoice}
+            onVoiceChange={handleVoiceChange}
+            rate={rate}
+            onRateChange={handleRateChange}
+          />
           <p>Created for learning and practice. Audio by Web Speech API.</p>
         </footer>
       </div>

@@ -1,4 +1,5 @@
 
+
 export interface Word {
   hebrew: string;
   transliteration: string;
@@ -31,6 +32,7 @@ export interface Verb {
   transliteration_female: string;
   meaning: string;
   preposition?: string;
+  hebrew_preposition?: 'be' | 'le';
 }
 
 export enum Category {

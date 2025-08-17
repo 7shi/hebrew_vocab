@@ -1,4 +1,5 @@
 
+
 import { VerbType } from "./types.ts";
 import type { Person, Verb, Place } from "./types.ts";
 
@@ -139,12 +140,16 @@ export const VERBS: Verb[] = [
       type: VerbType.Existence, 
       male: "הָיָה", transliteration_male: "hayah", 
       female: "הָיְתָה", transliteration_female: "hayta", 
-      meaning: "was in",
+      meaning: "was",
+      preposition: "in",
+      hebrew_preposition: "be",
     },
     { 
       type: VerbType.Movement, 
       male: "הָלַךְ", transliteration_male: "halakh", 
       female: "הָלְכָה", transliteration_female: "halkha", 
-      meaning: "went to",
+      meaning: "went",
+      preposition: "to",
+      hebrew_preposition: "le",
     }
 ];
